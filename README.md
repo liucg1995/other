@@ -1,277 +1,78 @@
-ixudra/curl
-================
-
-Custom PHP cURL library for the Laravel 4 or 5 framework - developed by [Ixudra](http://ixudra.be).
-
-This package can be used by anyone at any given time, but keep in mind that it is optimized for my personal custom workflow. It may not suit your project perfectly and modifications may be in order.
-
-
-
+# Boilerplate Laravel 5 Package
 
 ## Installation
 
-Pull this package in through Composer.
+Clone this repo with minimal history:
 
-```js
+```sh
+git clone --depth 1 git@github.com:cviebrock/laravel5-package-template.git
+```
 
-    {
-        "require": {
-            "ixudra/curl": "6.*"
+Rename the directory and re-init it as your own package:
+
+```sh
+mv laravel5-package-template my-package
+cd my-package
+rm -rf .git
+git init
+```
+
+
+## Configuration
+
+The boilerplate files provide a scaffold for building your own package.  You'll need to make a bunch of changes to the files we've provided to make it your own.
+
+
+### composer.json
+
+Edit `composer.json` to reflect your package information.  At a minimum, you will need to change the package name and autoload lines so that "vendor/package" reflects your new package's name and namespace.
+
+```json
+{
+    "name": "vendor/package",
+    ...
+    "autoload": {
+        "psr-4": {
+            "Vendor\\Package\\": "src/"
         }
-    }
-
+    },
+    ...
+},
 ```
 
 
-### Laravel 5.* Integration
+### config/packagename.php
 
-Add the service provider to your `config/app.php` file:
+Rename `config/packagename.php` to something more useful, like `config/my-package.php`.  This is the configuration file that Laravel will publish into it's `config` directory.  Laravel 5 doesn't use the `config/packages/vendor/...` structure that Laravel 4 did, so pick a file name that's not likely to conflict with existing configuration files.
+
+
+### src/ServiceProvider.php
+
+Open up `src/ServiceProvider.php` as well.  At a minimum you'll need to change the namespace at the top of the file (it needs to match the PSR-4 namespace you set in `composer.json`).
+
+In the `boot()` method, comment out or uncomment the components your package will need.  For example, if your package only has a configuration, then you can comment out everything except the `handleConfigs()` call:
 
 ```php
-
-    'providers'     => array(
-
-        //...
-        Ixudra\Curl\CurlServiceProvider::class,
-
-    ),
-
+public function boot() {
+    $this->handleConfigs();
+    // $this->handleMigrations();
+    // $this->handleViews();
+    // $this->handleTranslations();
+    // $this->handleRoutes();
+}
 ```
 
-Add the facade to your `config/app.php` file:
+In the `handleConfigs()` method, you'll want to change the "packagename" references to the name you chose up above (in the [config/packagename.php] instructions).
 
-```php
+For the other methods, again change instances of "vendor" and "packagename" to your package's name.
 
-    'facades'       => array(
 
-        //...
-        'Curl'          => Ixudra\Curl\Facades\Curl::class,
+### Last Steps
 
-    ),
+Update the `LICENSE` file as required (make sure it matches what you said your package's license is in `composer.json`).
 
-```
+Finally, edit this `README.md` file and replace it with a description of your own, awesome Laravel 5 package.
 
+Commit everything to your (newly initialized) git repo, and push it wherever you'll keep your package (Github, etc.).
 
-### Laravel 4.* Integration
-
-Add the service provider to your `app/config/app.php` file:
-
-```php
-
-    'providers'     => array(
-
-        //...
-        'Ixudra\Curl\CurlServiceProvider',
-
-    ),
-
-```
-
-Add the facade to your `app/config/app.php` file:
-
-```php
-
-    'facades'       => array(
-
-        //...
-        'Curl'          => 'Ixudra\Curl\Facades\Curl',
-
-    ),
-
-```
-
-### Integration without Laravel
-
-Create a new instance of the `CurlService` where you would like to use the package:
-
-```php
-
-    $curlService = new \Ixudra\Curl\CurlService();
-
-```
-
-
-
-
-## Usage
-
-### Laravel usage
-
-The package provides an easy interface for sending cURL requests from your application. The package provides a fluent 
-interface similar the Laravel query builder to easily configure the request. There are several utility methods that allow
-you to easily add certain options to the request. If no utility method applies, you can also use the general `withOption`
-method.
-
-### Sending GET requests
-
-In order to send a `GET` request, you need to use the `get()` method that is provided by the package:
-
-```php
-
-    // Send a GET request to: http://www.foo.com/bar
-    $response = Curl::to('http://www.foo.com/bar')
-        ->get();
-
-    // Send a GET request to: http://www.foo.com/bar?foz=baz
-    $response = Curl::to('http://www.foo.com/bar')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->get();
-
-    // Send a GET request to: http://www.foo.com/bar?foz=baz using JSON
-    $response = Curl::to('http://www.foo.com/bar')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->asJson()
-        ->get();
-
-```
-
-
-### Sending POST requests
-
-Post requests work similar to `GET` requests, but use the `post()` method instead:
-
-```php
-
-    // Send a POST request to: http://www.foo.com/bar
-    $response = Curl::to('http://www.foo.com/bar')
-        ->post();
-
-    // Send a POST request to: http://www.foo.com/bar
-    $response = Curl::to('http://www.foo.com/bar')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->post();
-
-    // Send a POST request to: http://www.foo.com/bar with arguments 'foz' = 'baz' using JSON
-    $response = Curl::to('http://www.foo.com/bar')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->asJson()
-        ->post();
-
-    // Send a POST request to: http://www.foo.com/bar with arguments 'foz' = 'baz' using JSON and return as associative array
-    $response = Curl::to('http://www.foo.com/bar')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->asJson( true )
-        ->post();
-
-```
-
-
-### Sending PUT requests
-
-Put requests work similar to `POST` requests, but use the `put()` method instead:
-
-```php
-
-    // Send a PUT request to: http://www.foo.com/bar/1 with arguments 'foz' = 'baz' using JSON
-    $response = Curl::to('http://www.foo.com/bar/1')
-        ->withData( array( 'foz' => 'baz' ) )
-        ->asJson()
-        ->put();
-
-```
-
-
-### Sending DELETE requests
-
-Delete requests work similar to `GET` requests, but use the `delete()` method instead:
-
-```php
-
-    // Send a DELETE request to: http://www.foo.com/bar/1 using JSON
-    $response = Curl::to('http://www.foo.com/bar/1')
-        ->asJson()
-        ->delete();
-
-```
-
-
-### Downloading files
-
-For downloading a file, you can use the `download()` method:
-
-```php
-
-    // Download an image from: file http://www.foo.com/bar.png
-    $response = Curl::to('http://foo.com/bar.png')
-        ->withContentType('image/png')
-        ->download('/path/to/dir/image.png');
-
-```
-
-
-### Debugging requests
-
-In case a request fails, it might be useful to get debug the request. In this case, you can use the `debug()` method. 
-This method uses one parameter, which is the name of the file in which the debug information is to be stored:
-
-```php
-
-    // Send a GET request to http://www.foo.com/bar and log debug information in /path/to/dir/logFile.txt
-    $response = Curl::to('http://www.foo.com/bar')
-            ->enableDebug('/path/to/dir/logFile.txt');
-            ->get();
-
-```
-
-
-### Using cURL options
-
-You can add various cURL options to the request using of several utility methods such as `withHeader()` for adding a 
-header to the request, or use the general `withOption()` method if no utility method applies. The package will 
-automatically prepend the options with the `CURLOPT_` prefix. It is worth noting that the package does not perform 
-any validation on the cURL options. Additional information about available cURL options can be found
-[here](http://php.net/manual/en/function.curl-setopt.php).
-
-
-
-### Usage without Laravel
-
-Usage without Laravel is identical to usage described previously. The only difference is that you will not be able to 
-use the facades to access the `CurlService`.
-
-```php
-
-    $curlService = new \Ixudra\Curl\CurlService();
-
-    // Send a GET request to: http://www.foo.com/bar
-    $response = $curlService->to('http://www.foo.com/bar')
-        ->get();
-
-    // Send a POST request to: http://www.foo.com/bar
-    $response = $curlService->to('http://www.foo.com/bar')
-        ->post();
-
-    // Send a PUT request to: http://www.foo.com/bar
-    $response = $curlService->to('http://www.foo.com/bar')
-        ->put();
-
-    // Send a DELETE request to: http://www.foo.com/bar
-    $response = $curlService->to('http://www.foo.com/bar')
-        ->delete();
-
-```
-
-
-
-
-## Planning
-
- - Add additional utility methods for other cURL options
- - Add contract to allow different HTTP providers such as Guzzle
-
-
-
-
-## License
-
-This template is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
-
-
-
-
-## Contact
-
-Jan Oris (developer)
-
-- Email: jan.oris@ixudra.be
-- Telephone: +32 496 94 20 57
+Enjoy coding!
