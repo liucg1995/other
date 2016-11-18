@@ -4,4 +4,6 @@
  * Your package config would go here
  */
 
-return [];
+return [
+    'message'=>'message'
+];

@@ -1,4 +1,4 @@
-<?php namespace Vendor\Package;
+<?php namespace Liuchengguos\Other;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
@@ -10,70 +10,35 @@ class ServiceProvider extends LaravelServiceProvider {
      * @var bool
      */
     protected $defer = false;
+    public function boot()
+    {
+
+    }
 
     /**
-     * Bootstrap the application events.
+     * Define the routes for the application.
      *
+     * @param \Illuminate\Routing\Router $router
      * @return void
      */
-    public function boot() {
-
-        $this->handleConfigs();
-        // $this->handleMigrations();
-        // $this->handleViews();
-        // $this->handleTranslations();
-        // $this->handleRoutes();
+    public function setupRoutes(Router $router)
+    {
+        if (! $this->app->routesAreCached()) {
+            require __DIR__.'/http/routes.php';
+        }
     }
 
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register() {
-
-        // Bind any implementations.
-
+    public function register()
+    {
+        $this->registerContact();
+        config([
+            'config/other.php',
+        ]);
     }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides() {
-
-        return [];
-    }
-
-    private function handleConfigs() {
-
-        $configPath = __DIR__ . '/../config/packagename.php';
-
-        $this->publishes([$configPath => config_path('packagename.php')]);
-
-        $this->mergeConfigFrom($configPath, 'packagename');
-    }
-
-    private function handleTranslations() {
-
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'packagename');
-    }
-
-    private function handleViews() {
-
-        $this->loadViewsFrom(__DIR__.'/../views', 'packagename');
-
-        $this->publishes([__DIR__.'/../views' => base_path('resources/views/vendor/packagename')]);
-    }
-
-    private function handleMigrations() {
-
-        $this->publishes([__DIR__ . '/../migrations' => base_path('database/migrations')]);
-    }
-
-    private function handleRoutes() {
-
-        include __DIR__.'/../routes.php';
+    private function registerContact()
+    {
+        $this->app->bind('other',function($app){
+            return new Other($app);
+        });
     }
 }

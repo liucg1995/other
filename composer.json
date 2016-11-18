@@ -1,7 +1,7 @@
 {
   "name": "liuchengguos/other",
-  "description": "123",
-  "keywords": ["laravel"],
+  "description": "",
+  "keywords": [],
   "homepage": "",
   "license": "MIT",
   "version": "1.0.0",
@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "liuchengguos\\other\\": "src/"
+      "Liuchengguos\\Other\\": "liuchengguos/other/src/"
     }
   },
   "minimum-stability": "dev"
