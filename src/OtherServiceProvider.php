@@ -16,9 +16,7 @@ class OtherServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->package('liuchengguos/other');
-        if (! $this->app->routesAreCached()) {
-            require __DIR__.'/http/routes.php';
-        }
+        $this->setupRoutes($this->app->router);
         $this->publishes([
             __DIR__.'/config/other.php' => config_path('other.php'),
         ]);
@@ -36,9 +34,26 @@ class OtherServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/config/other.php', 'other'
         );
+        config([
+            'config/other.php',
+        ]);
         $this->app->bind('other', function()
         {
             return new Other;
+        });
+    }
+
+    /**
+     * Define the routes for the application.
+     *
+     * @param \Illuminate\Routing\Router $router
+     * @return void
+     */
+    public function setupRoutes(Router $router)
+    {
+        $router->group(['namespace' => 'Liuchengguos\Other\Http\Controllers'], function($router)
+        {
+            require __DIR__.'/Http/routes.php';
         });
     }
 
