@@ -21,6 +21,9 @@ class OtherServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->package('liuchengguos/other');
+        if (! $this->app->routesAreCached()) {
+            require __DIR__.'/src/http/routes.php';
+        }
     }
 
     /**
