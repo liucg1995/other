@@ -135,7 +135,8 @@ class Other {
     }
 
     public  static function  test(){
-        echo 111;
+        $v= config("other.message");
+        print_r($v);
     }
 
     // load html from string
