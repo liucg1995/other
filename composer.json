@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Liuchengguos\\Other\\": "liuchengguos/other/src/"
+      "Liuchengguos\\Other\\": "src/"
     }
   },
   "minimum-stability": "dev"
