@@ -134,6 +134,10 @@ class Other {
         $this->clear();
     }
 
+    public  static function  test(){
+        echo 111;
+    }
+
     // load html from string
     public function load($str, $lowercase=true, $stripRN=true, $defaultBRText=DEFAULT_BR_TEXT, $defaultSpanText=DEFAULT_SPAN_TEXT)
     {
