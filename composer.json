@@ -1,5 +1,5 @@
 {
-    "name": "liuchengguos/curl",
+    "name": "liuchengguos/other",
     "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
     "version": "6.3.0",
     "keywords": ["Ixudra", "Laravel", "Curl"],
