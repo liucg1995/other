@@ -22,7 +22,7 @@ class OtherServiceProvider extends ServiceProvider
     {
         $this->package('liuchengguos/other');
         if (! $this->app->routesAreCached()) {
-            require __DIR__.'/src/http/routes.php';
+            require __DIR__.'/http/routes.php';
         }
     }
 
