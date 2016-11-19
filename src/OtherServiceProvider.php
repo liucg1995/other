@@ -17,9 +17,11 @@ class OtherServiceProvider extends ServiceProvider
     {
 //        $this->package('liuchengguos/other');
         $this->setupRoutes($this->app->router);
+        $this->loadViewsFrom(__DIR__.'/views', 'other');
+        $this->loadMigrationsFrom(__DIR__.'/migrations');
         $this->publishes([
             __DIR__.'/config/other.php' => config_path('other.php')
-        ], 'config');
+        ], 'other');
 
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/other'),
@@ -27,9 +29,8 @@ class OtherServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/migrations/' => database_path('migrations')
-        ], 'migrations');
-//        $this->loadViewsFrom(__DIR__.'/views', 'courier');
-//        $this->loadMigrationsFrom(__DIR__.'/migrations');
+        ], 'other');
+
     }
 
     /**
