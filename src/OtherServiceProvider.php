@@ -22,6 +22,10 @@ class OtherServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
+            __DIR__.'/views' => base_path('resources/views/vendor/other'),
+        ]);
+
+        $this->publishes([
             __DIR__.'/migrations/' => database_path('migrations')
         ], 'migrations');
 //        $this->loadViewsFrom(__DIR__.'/views', 'courier');
