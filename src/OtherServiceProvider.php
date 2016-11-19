@@ -20,7 +20,7 @@ class OtherServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/other.php' => config_path('other.php'),
         ]);
-        $this->loadViewsFrom(__DIR__.'/views', 'courier');
+        $this->loadViewsFrom(__DIR__.'/views', 'other');
         $this->loadMigrationsFrom(__DIR__.'/migrations');
     }
 
@@ -51,10 +51,9 @@ class OtherServiceProvider extends ServiceProvider
      */
     public function setupRoutes(Router $router)
     {
-        $router->group(['namespace' => 'Liuchengguos\Other\Http\Controllers'], function($router)
-        {
-            require __DIR__.'/Http/routes.php';
-        });
+
+            require __DIR__.'/http/routes.php';
+
     }
 
     /**
