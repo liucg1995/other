@@ -15,13 +15,17 @@ class OtherServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->package('liuchengguos/other');
+//        $this->package('liuchengguos/other');
         $this->setupRoutes($this->app->router);
         $this->publishes([
-            __DIR__.'/config/other.php' => config_path('other.php'),
-        ]);
-        $this->loadViewsFrom(__DIR__.'/views', 'other');
-        $this->loadMigrationsFrom(__DIR__.'/migrations');
+            __DIR__.'/config/other.php' => config_path('other.php')
+        ], 'config');
+
+        $this->publishes([
+            __DIR__.'/migrations/' => database_path('migrations')
+        ], 'migrations');
+//        $this->loadViewsFrom(__DIR__.'/views', 'courier');
+//        $this->loadMigrationsFrom(__DIR__.'/migrations');
     }
 
     /**
