@@ -3,6 +3,7 @@
 namespace Liuchengguos\Other;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
 
 class OtherServiceProvider extends ServiceProvider
 {
@@ -16,7 +17,7 @@ class OtherServiceProvider extends ServiceProvider
     public function boot()
     {
 //        $this->package('liuchengguos/other');
-        $this->setupRoutes($this->app->router);
+
         $this->loadViewsFrom(__DIR__.'/views', 'other');
         $this->loadMigrationsFrom(__DIR__.'/migrations');
         $this->publishes([
@@ -25,11 +26,13 @@ class OtherServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/other'),
-        ]);
+        ],'other');
 
         $this->publishes([
             __DIR__.'/migrations/' => database_path('migrations')
         ], 'other');
+        $this->setupRoutes($this->app->router);
+//        $this->setupRoutes()
 
     }
 
@@ -40,15 +43,32 @@ class OtherServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/config/other.php', 'other'
-        );
         config([
             'config/other.php',
         ]);
-        $this->app->bind('other', function()
+        $this->app->bind('other', function($app)
         {
-            return new Other;
+            return new Other($app);
+        });
+
+//        $this->setupClassAliases();
+//        $this->registerRouter();
+    }
+
+    protected function setupClassAliases()
+    {
+        $aliases = [
+            'admin.router'  => \Liuchengguos\Other\Http\Router::class,
+        ];
+
+        foreach ($aliases as $key => $alias) {
+            $this->app->alias($key, $alias);
+        }
+    }
+    public function registerRouter()
+    {
+        $this->app->singleton('admin.router', function ($app) {
+            return new Router($app['router']);
         });
     }
 
@@ -60,9 +80,10 @@ class OtherServiceProvider extends ServiceProvider
      */
     public function setupRoutes(Router $router)
     {
-
+        $router->group(['namespace' => 'Liuchengguos\Other\Http\Controllers'], function($router)
+        {
             require __DIR__.'/http/routes.php';
-
+        });
     }
 
     /**
@@ -72,7 +93,7 @@ class OtherServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array();
+        return array("other");
     }
 
 }
