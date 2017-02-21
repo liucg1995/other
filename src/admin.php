@@ -1,1 +1,1 @@
-<?php namespace Liuchengguos\Other;
+<?php namespace Liuchengguos\Other;\asdasdada
